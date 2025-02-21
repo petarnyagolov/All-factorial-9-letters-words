@@ -29,14 +29,22 @@ public class Main {
   private static Set<String> factorialWords = new HashSet<>();
 
   public static void main(String[] args) throws IOException {
-    // start time
     long startTime = System.currentTimeMillis();
+
     loadAllWords();
     findFactorialWords();
-    factorialWords.forEach(System.out::println);
-    // end time
-    long endTime = System.currentTimeMillis();
-    System.out.println("Execution time: " + (endTime - startTime) + "ms");
+
+    StringBuilder sb = new StringBuilder();
+    int counter = 0;
+    for (String word : factorialWords) {
+      if (counter > 0 && counter % 10 == 0) {
+        sb.append("\n");
+      }
+      sb.append(word).append(" ");
+      counter++;
+    }
+    System.out.println(sb.toString().trim());
+    System.out.println("Execution time: " + (System.currentTimeMillis() - startTime) + "ms");
     System.out.println("Factorial words count: " + factorialWords.size());
   }
 
