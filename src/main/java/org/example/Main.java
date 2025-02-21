@@ -29,9 +29,15 @@ public class Main {
   private static Set<String> factorialWords = new HashSet<>();
 
   public static void main(String[] args) throws IOException {
+    // start time
+    long startTime = System.currentTimeMillis();
     loadAllWords();
     findFactorialWords();
     factorialWords.forEach(System.out::println);
+    // end time
+    long endTime = System.currentTimeMillis();
+    System.out.println("Execution time: " + (endTime - startTime) + "ms");
+    System.out.println("Factorial words count: " + factorialWords.size());
   }
 
   public static void loadAllWords() throws IOException {
@@ -80,59 +86,56 @@ public class Main {
 
   private static void findFactorialWords() {
     for (String current : nineLetterWords) {
-      for (int j = 0; j < current.length(); j++) {
-        String eightCurrentWord = current.substring(0, j) + current.substring(j + 1);
-
-        if (eightLetterWords.contains(eightCurrentWord)) {
-          for (int k = 0; k < eightCurrentWord.length(); k++) {
-            String sevenCurrentWord = eightCurrentWord.substring(0, k) + eightCurrentWord.substring(k + 1);
-
-            if (sevenLetterWords.contains(sevenCurrentWord)) {
-              for (int l = 0; l < sevenCurrentWord.length(); l++) {
-                String sixCurrentWord = sevenCurrentWord.substring(0, l) + sevenCurrentWord.substring(l + 1);
-
-                if (sixLetterWords.contains(sixCurrentWord)) {
-                  for (int m = 0; m < sixCurrentWord.length(); m++) {
-                    String fiveCurrentWord = sixCurrentWord.substring(0, m) + sixCurrentWord.substring(m + 1);
-
-                    if (fiveLetterWords.contains(fiveCurrentWord)) {
-                      for (int n = 0; n < fiveCurrentWord.length(); n++) {
-                        String fourCurrentWord = fiveCurrentWord.substring(0, n) + fiveCurrentWord.substring(n + 1);
-
-                        if (fourLetterWords.contains(fourCurrentWord)) {
-                          for (int o = 0; o < fourCurrentWord.length(); o++) {
-                            String threeCurrentWord = fourCurrentWord.substring(0, o)
-                                + fourCurrentWord.substring(o + 1);
-
-                            if (threeLetterWords.contains(threeCurrentWord)) {
-                              for (int p = 0; p < threeCurrentWord.length(); p++) {
-                                String twoCurrentWord = threeCurrentWord.substring(0, p)
-                                    + threeCurrentWord.substring(p + 1);
-
-                                if (twoLetterWords.contains(twoCurrentWord)) {
-                                  for (int q = 0; q < twoCurrentWord.length(); q++) {
-                                    String oneCurrentWord = twoCurrentWord.substring(0, q)
-                                        + twoCurrentWord.substring(q + 1);
-
-                                    if (oneLetterWords.contains(oneCurrentWord)) {
-                                      factorialWords.add(current);
-                                      break;
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+      if (isFactorialWord(current, 9)) {
+        factorialWords.add(current);
       }
     }
+  }
+
+  private static boolean isFactorialWord(String word, int length) {
+    if (length == 1) {
+      return oneLetterWords.contains(word);
+    }
+
+    boolean isValid = false;
+    switch (length) {
+      case 2:
+        isValid = twoLetterWords.contains(word);
+        break;
+      case 3:
+        isValid = threeLetterWords.contains(word);
+        break;
+      case 4:
+        isValid = fourLetterWords.contains(word);
+        break;
+      case 5:
+        isValid = fiveLetterWords.contains(word);
+        break;
+      case 6:
+        isValid = sixLetterWords.contains(word);
+        break;
+      case 7:
+        isValid = sevenLetterWords.contains(word);
+        break;
+      case 8:
+        isValid = eightLetterWords.contains(word);
+        break;
+      case 9:
+        isValid = nineLetterWords.contains(word);
+        break;
+      default:
+        return false;
+    }
+    if (!isValid) {
+      return false;
+    }
+
+    for (int i = 0; i < word.length(); i++) {
+      String subWord = word.substring(0, i) + word.substring(i + 1);
+      if (isFactorialWord(subWord, length - 1)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
